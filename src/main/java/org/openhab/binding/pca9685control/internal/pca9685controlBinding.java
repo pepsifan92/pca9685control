@@ -17,6 +17,7 @@ import org.openhab.core.library.types.DecimalType;
 import org.openhab.core.library.types.IncreaseDecreaseType;
 import org.openhab.core.library.types.OnOffType;
 import org.openhab.core.library.types.PercentType;
+import org.openhab.core.library.types.StringType;
 import org.openhab.core.types.Command;
 import org.openhab.core.types.State;
 import org.osgi.framework.BundleContext;
@@ -151,10 +152,9 @@ public class pca9685controlBinding extends AbstractActiveBinding<pca9685controlB
 	 */
 	@Override
 	protected void execute() {
-		// the frequently executed code (polling) goes here ...
-		String addresses = "";
-		//for(Integer address = providers.iterator().next().getPCA9685Map().keySet()
-		logger.debug("execute() method is called! (pca9685control) ItemNames: {}, Addresses: {}", providers.iterator().next().getItemNames().toString(), providers.iterator().next().getPCA9685Map().keySet());		
+		// the frequently executed code (polling) goes here ...		
+		logger.debug("execute() method is called! (pca9685control) ItemNames: {}, Addresses: {}", providers.iterator().next().getItemNames().toString(), providers.iterator().next().getPCA9685Map().keySet());
+		eventPublisher.postCommand("pca9685controlBindingStatus", StringType.valueOf("Addresses given in item-config: " + providers.iterator().next().getPCA9685Map().keySet()));		
 	}
 
 	/**

@@ -81,13 +81,14 @@ public class pca9685controlGenericBindingProvider extends AbstractGenericBinding
 	/* ================================= SELF WRITTEN METHODS - BEGIN ===============================*/
 	
 	private void checkOfValidValues(pca9685controlConfig config, String itemName){
+		//pwmValue is no item-file value, so it isn't checked here.
 		if(config.address < 64 && config.address > 128){
 			throw new IllegalArgumentException("The given address '" + config.address + "'of the item '" + itemName + "' is invalid! PCA9685 must be between 64 and 128 (0x40 and 0x80)");
 		}
 		
 		if(config.pinNumber < 0 && config.pinNumber > 15){
 			throw new IllegalArgumentException("The pinNumber of the item '" + itemName + "'is invalid! Must be between 0-15.");
-		}		
+		}				
 	}
 		
 	private void handleBoards(pca9685controlConfig config){
@@ -107,7 +108,6 @@ public class pca9685controlGenericBindingProvider extends AbstractGenericBinding
 	}
 	
 	private void removeUnusedBoardsFromMap(pca9685controlConfig config){
-		//Check all Boards in map of usage. If not used, remove from map.
 		keyLoop:
 		for(Integer mapKey : PCA9685Map.keySet()){
 			for(BindingConfig bindingConfig : bindingConfigs.values()){
