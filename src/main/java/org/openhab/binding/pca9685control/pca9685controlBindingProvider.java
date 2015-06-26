@@ -47,6 +47,11 @@ public interface pca9685controlBindingProvider extends BindingProvider {
 	 * @return Returns the PWM value. (0-100)
 	 */
 	public int getPwmValue(String itemName);
+	
+	/**
+	 * Set the PWM value of the given Item 
+	 * @param itemName Name of the Item 
+	 */
 	public void setPwmValue(String itemName, int value);
 	
 	/**

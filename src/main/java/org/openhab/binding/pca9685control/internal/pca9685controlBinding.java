@@ -40,9 +40,7 @@ public class pca9685controlBinding extends AbstractActiveBinding<pca9685controlB
 
 	private static final Logger logger = 
 		LoggerFactory.getLogger(pca9685controlBinding.class);	
-	
-	//public static PCA9685PwmControl pca = new PCA9685PwmControl(0x40);
-	
+		
 	/**
 	 * The BundleContext. This is only valid when the bundle is ACTIVE. It is set in the activate()
 	 * method and must not be accessed anymore once the deactivate() method was called or before activate()
@@ -59,23 +57,7 @@ public class pca9685controlBinding extends AbstractActiveBinding<pca9685controlB
 	
 	public pca9685controlBinding() {
 		logger.debug("pca9685controlBinding binding started");
-	}
-			
-	
-	/* ADDED THIS FOR GETTING ALL COMMANDS... ****************************/
-	/**
-	 * @{inheritDoc}
-	 */
-	@Override
-	public void receiveCommand(String itemName, Command command) {
-		// does any provider contain a binding config?
-		if (!providesBindingFor(itemName)) {
-			return;
-		}
-		internalReceiveCommand(itemName, command);
-	}
-	/* ADDED THIS FOR GETTING ALL COMMANDS... ****************************/
-	
+	}			
 	
 	/**
 	 * Called by the SCR to activate the component with its configuration read from CAS
@@ -84,11 +66,7 @@ public class pca9685controlBinding extends AbstractActiveBinding<pca9685controlB
 	 * @param configuration Configuration properties for this component obtained from the ConfigAdmin service
 	 */
 	public void activate(final BundleContext bundleContext, final Map<String, Object> configuration) {
-		this.bundleContext = bundleContext;
-
-		// the configuration is guaranteed not to be null, because the component definition has the
-		// configuration-policy set to require. If set to 'optional' then the configuration may be null
-		
+		this.bundleContext = bundleContext;	
 			
 		// to override the default refresh interval one has to add a 
 		// parameter to openhab.cfg like <bindingName>:refresh=<intervalInMs>
@@ -96,8 +74,6 @@ public class pca9685controlBinding extends AbstractActiveBinding<pca9685controlB
 		if (StringUtils.isNotBlank(refreshIntervalString)) {
 			refreshInterval = Long.parseLong(refreshIntervalString);
 		}
-
-		// read further config parameters here ...
 		
 		setProperlyConfigured(true);
 	}
@@ -153,7 +129,7 @@ public class pca9685controlBinding extends AbstractActiveBinding<pca9685controlB
 	@Override
 	protected void execute() {
 		// the frequently executed code (polling) goes here ...		
-		logger.debug("execute() method is called! (pca9685control) ItemNames: {}, Addresses: {}", providers.iterator().next().getItemNames().toString(), providers.iterator().next().getPCA9685Map().keySet());
+//		logger.debug("execute() method is called! (pca9685control) ItemNames: {}, Addresses: {}", providers.iterator().next().getItemNames().toString(), providers.iterator().next().getPCA9685Map().keySet());
 		eventPublisher.postCommand("pca9685controlBindingStatus", StringType.valueOf("Addresses given in item-config: " + providers.iterator().next().getPCA9685Map().keySet()));		
 	}
 
@@ -165,7 +141,7 @@ public class pca9685controlBinding extends AbstractActiveBinding<pca9685controlB
 		// the code being executed when a command was sent on the openHAB
 		// event bus goes here. This method is only called if one of the
 		// BindingProviders provide a binding for the given 'itemName'.
-		logger.debug("pca9685control: internalReceiveCommand({},{}) is called!", itemName, command);
+//		logger.debug("pca9685control: internalReceiveCommand({},{}) is called!", itemName, command);
 		
 		for (pca9685controlBindingProvider provider : providers) {
 			int i2cAddress = provider.getAddress(itemName);		
@@ -191,6 +167,7 @@ public class pca9685controlBinding extends AbstractActiveBinding<pca9685controlB
 				}
 			} else {				
 				try{
+					//Hopefully command is a integer value 0-100.
 					Integer value = Integer.parseInt(command.toString());
 					provider.getPCA9685Map().get(i2cAddress).setPwm(pin, NaturalFading.STEPS_100[value]);
 					provider.setPwmValue(itemName, value);
